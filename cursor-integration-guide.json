@@ -1,0 +1,214 @@
+{
+  "name": "Prompt Go MCP Integration Guide",
+  "description": "Complete integration guide for Cursor AI teams",
+  "version": "1.0.0",
+  "cursor_settings": {
+    "recommended_config": {
+      "mcpServers": {
+        "prompt-go": {
+          "command": "python",
+          "args": ["-m", "apps.mcp_server"],
+          "cwd": "{{ABSOLUTE_PATH_TO_PROMPT_GO}}",
+          "env": {
+            "DATABASE_URL": "sqlite+aiosqlite:///./promptgo_{{ORG_NAME}}.db",
+            "PG_ORG": "{{TEAM_NAME}}",
+            "PG_ENABLE_LEARNING": "true",
+            "PG_BUDGET_MODE": "soft",
+            "PG_ALLOW_WEB": "true"
+          }
+        }
+      }
+    },
+    "environment_variables": {
+      "PG_ORG": {
+        "description": "Your team/organization name",
+        "example": "cursor-frontend-team",
+        "required": true
+      },
+      "PG_ENABLE_LEARNING": {
+        "description": "Enable adaptive learning from team patterns",
+        "options": ["true", "false"],
+        "default": "true",
+        "recommended": "true"
+      },
+      "PG_BUDGET_MODE": {
+        "description": "Budget enforcement mode",
+        "options": ["observe", "soft", "hard"],
+        "default": "soft",
+        "recommended": "soft"
+      },
+      "DATABASE_URL": {
+        "description": "Local SQLite database for team data",
+        "example": "sqlite+aiosqlite:///./promptgo_myteam.db",
+        "required": true
+      }
+    }
+  },
+  "mcp_tools": {
+    "suggestRoute": {
+      "description": "Get intelligent routing suggestion for a prompt",
+      "usage": "Automatically called by Cursor when you type prompts",
+      "returns": {
+        "top_route": "Recommended channel (web/agent/ask/direct)",
+        "ranking": "All routes with confidence scores",
+        "reasons": "Why this routing was chosen",
+        "suggestions": "Tips to improve the prompt",
+        "ux_hints": "Visual indicators for Cursor UI"
+      },
+      "example_response": {
+        "top_route": "web",
+        "ranking": [
+          {"route": "web", "score": 0.85},
+          {"route": "direct", "score": 0.42}
+        ],
+        "reasons": ["Fresh/volatile info → web"],
+        "ux_hints": {
+          "primary_indicator": {
+            "route": "web",
+            "confidence": 0.85,
+            "icon": "🌐",
+            "color": "#4CAF50",
+            "tooltip": "Best for fresh information and current data"
+          }
+        }
+      }
+    },
+    "getBudgetStatus": {
+      "description": "Get team budget status with alerts and suggestions",
+      "usage": "Check team spending and get cost optimization tips",
+      "parameters": {
+        "org": "Team/organization name"
+      },
+      "returns": {
+        "current_spend": "Month-to-date spending",
+        "budget_limit": "Monthly budget limit",
+        "percentage_used": "Budget utilization percentage", 
+        "alerts": "Budget alerts and warnings",
+        "suggestions": "Cost optimization recommendations"
+      }
+    },
+    "getUsageSummary": {
+      "description": "Get detailed usage analytics for the team",
+      "parameters": {
+        "org": "Team name",
+        "since": "Start date (ISO format)",
+        "until": "End date (ISO format)",
+        "by": "Group by: user, feature, or model"
+      }
+    },
+    "weeklyCursorRuleRecommendations": {
+      "description": "Get auto-generated Cursor rules based on team patterns",
+      "usage": "Optimize team workflow with data-driven rules",
+      "returns": {
+        "summary": "High-level recommendations",
+        "rules": "Specific rules to apply in Cursor"
+      }
+    }
+  },
+  "dashboard_urls": {
+    "team_insights": "http://localhost:8000/insights/team/{org_name}",
+    "api_metrics": "http://localhost:8000/insights/api/team/{org_name}/metrics",
+    "roi_reports": "http://localhost:8000/reports/{org_name}",
+    "usage_analytics": "http://localhost:8000/usage/{org_name}"
+  },
+  "setup_checklist": [
+    {
+      "step": 1,
+      "task": "Run automated setup script",
+      "command": "python setup-cursor-team.py --org 'Your Team'",
+      "estimated_time": "2 minutes"
+    },
+    {
+      "step": 2,
+      "task": "Verify Cursor settings.json configuration",
+      "file": "~/.cursor/settings.json or similar",
+      "validation": "Check mcpServers.prompt-go exists"
+    },
+    {
+      "step": 3,
+      "task": "Restart Cursor to load MCP server",
+      "estimated_time": "30 seconds"
+    },
+    {
+      "step": 4,
+      "task": "Test with a sample prompt",
+      "example": "What's the latest in React 19?",
+      "expected": "Should see routing suggestion indicator"
+    },
+    {
+      "step": 5,
+      "task": "Access team dashboard",
+      "url": "http://localhost:8000/insights/team/your-team",
+      "expected": "Team metrics and insights visible"
+    }
+  ],
+  "optimization_tips": {
+    "routing": [
+      "Use specific keywords for better routing (e.g., 'latest', 'implement', 'explain')",
+      "Break complex tasks into smaller prompts for cost efficiency",
+      "Use 'ask' mode when requirements are unclear"
+    ],
+    "budget": [
+      "Enable soft budget limits to automatically optimize costs",
+      "Review weekly recommendations and apply suggested rules",
+      "Monitor dashboard for usage patterns and optimization opportunities"
+    ],
+    "team_collaboration": [
+      "Share successful prompt patterns across team members",
+      "Use consistent terminology for better learning",
+      "Regular budget reviews and optimization sessions"
+    ]
+  },
+  "troubleshooting": {
+    "common_issues": {
+      "mcp_server_not_detected": {
+        "symptoms": ["Cursor doesn't show routing suggestions", "MCP tools not available"],
+        "solutions": [
+          "Check settings.json syntax with JSON validator",
+          "Ensure absolute paths, not relative",
+          "Restart Cursor completely",
+          "Test server: python -m apps.mcp_server --test"
+        ]
+      },
+      "budget_tracking_issues": {
+        "symptoms": ["Budget status shows $0", "No usage data"],
+        "solutions": [
+          "Verify PG_ORG environment variable",
+          "Check database file permissions",
+          "Ensure team policy file exists in config/"
+        ]
+      },
+      "dashboard_not_loading": {
+        "symptoms": ["Dashboard shows 404", "No team data"],
+        "solutions": [
+          "Start dashboard: python -m apps.http_dashboard",
+          "Check URL format: /insights/team/exact-team-name",
+          "Verify team has generated some usage data"
+        ]
+      }
+    }
+  },
+  "privacy_security": {
+    "data_handling": [
+      "All processing happens locally on your machine",
+      "Prompts are hashed, never stored in plain text", 
+      "Only metadata and usage patterns are analyzed",
+      "Each team has isolated database and config"
+    ],
+    "network_requirements": [
+      "No external API calls required for core functionality",
+      "Optional web routing uses your existing internet connection",
+      "Dashboard runs locally on localhost:8000"
+    ]
+  },
+  "enterprise_features": {
+    "available": [
+      "Multi-team management and cross-team analytics",
+      "Advanced budget controls and approval workflows",
+      "Custom routing rules and model preferences", 
+      "SSO integration and audit logging",
+      "On-premise deployment with custom models"
+    ],
+    "contact": "Enterprise deployments available on request"
+  }
+}

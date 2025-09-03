@@ -30,6 +30,7 @@ class SuggestResponse(BaseModel):
     ranking: List[ScoreItem]
     reasons: List[str]
     suggestions: Dict[str, Any]
+    ux_hints: Optional[Dict[str, Any]] = None  # New field for Cursor UI integration
 
 
 class OutcomeRequest(BaseModel):

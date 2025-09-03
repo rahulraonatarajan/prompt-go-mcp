@@ -83,6 +83,18 @@ def _tool_schemas() -> list[dict[str, Any]]:
             },
             "outputSchema": {"type": "object"},
         },
+        {
+            "name": "getBudgetStatus",
+            "description": "Get team budget status with alerts and suggestions.",
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "org": {"type": "string"}
+                },
+                "required": ["org"]
+            },
+            "outputSchema": {"type": "object"},
+        },
     ]
 
 
@@ -116,6 +128,9 @@ async def handle(req: Dict[str, Any]) -> Dict[str, Any]:
             return {"jsonrpc": "2.0", "id": req.get("id"), "result": {"content": [{"type": "json", "json": res}]}}
         if name == "logRequest":
             res = await t_log_request(LogRequest(**arguments))
+            return {"jsonrpc": "2.0", "id": req.get("id"), "result": {"content": [{"type": "json", "json": res}]}}
+        if name == "getBudgetStatus":
+            res = await t_budget_status(arguments.get("org"))
             return {"jsonrpc": "2.0", "id": req.get("id"), "result": {"content": [{"type": "json", "json": res}]}}
         return {"jsonrpc": "2.0", "id": req.get("id"), "error": {"code": -32601, "message": f"Unknown tool: {name}"}}
 
