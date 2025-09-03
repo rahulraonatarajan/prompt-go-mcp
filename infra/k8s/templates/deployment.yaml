@@ -1,0 +1,16 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata: { name: prompt-go }
+spec:
+  replicas: 1
+  selector: { matchLabels: { app: prompt-go } }
+  template:
+    metadata: { labels: { app: prompt-go } }
+    spec:
+      containers:
+        - name: mcp
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          env:
+            - name: DATABASE_URL
+              value: "sqlite+aiosqlite:///./promptgo.db"
+

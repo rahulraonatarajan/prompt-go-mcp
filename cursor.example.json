@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "prompt-go": {
+      "command": "python",
+      "args": ["-m", "apps.mcp_server"],
+      "env": {
+        "DATABASE_URL": "sqlite+aiosqlite:///./promptgo.db",
+        "PG_ALLOW_WEB": "false",
+        "PG_ORG": "offlyn.ai"
+      }
+    }
+  }
+}
+

@@ -1,0 +1,6 @@
+openai/gpt-4o-mini: { in: 0.15, out: 0.60 }
+openai/gpt-4o: { in: 2.50, out: 10.00 }
+openai/gpt-3.5-turbo: { in: 0.50, out: 1.50 }
+anthropic/claude-3-haiku: { in: 0.25, out: 1.25 }
+local/tiny-llama: { in: 0.00, out: 0.00 }
+

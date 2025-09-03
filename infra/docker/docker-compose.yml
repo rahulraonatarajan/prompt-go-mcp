@@ -1,0 +1,16 @@
+services:
+  mcp:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.mcp
+    environment:
+      - DATABASE_URL=sqlite+aiosqlite:///./promptgo.db
+      - PG_ALLOW_WEB=false
+    stdin_open: true
+    tty: true
+  dashboard:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.dashboard
+    ports: ["8766:8766"]
+

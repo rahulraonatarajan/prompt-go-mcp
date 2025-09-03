@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: prompt-go
+spec:
+  selector:
+    app: prompt-go
+  ports:
+    - name: http
+      port: {{ .Values.service.port }}
+      targetPort: 8766
+  type: {{ .Values.service.type }}
+

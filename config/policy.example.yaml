@@ -1,0 +1,6 @@
+org: offlyn.ai
+weights: { web: 1.1, agent: 1.0, ask: 0.9, direct: 0.9 }
+
+freshness_domains: [ "developer.apple.com", "docs.github.com" ]
+budget_mode: observe
+
